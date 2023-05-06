@@ -45,7 +45,4 @@ COPY scripts .
 COPY data /data
 
 # Run the Spark job
-CMD ["spark-submit", "--master", "local[*]", "--conf", "spark.driver.bindAddress=0.0.0.0", "--driver-class-path", "/usr/local/spark/jars/delta-core_2.12-1.1.0.jar", "--packages", "io.delta:delta-core_2.12:1.1.0", "--name", "spark-job-1", "spark-job-1.py" , "--data_path", "/data", "--output_path", "/app/output", "--log_file", "/logs/ingestion.log"]
-# RUN spark-submit --master local[*] --conf spark.driver.bindAddress=0.0.0.0 --driver-class-path /usr/local/spark/jars/delta-core_2.12-1.1.0.jar --packages io.delta:delta-core_2.12:1.1.0 --name spark-job-1 spark-job-1.py --data_path /data --output_path /app/output --log_file /logs/ingestion.log
-
-# CMD ["spark-submit", "--master", "local[*]", "--name", "spark-job-2", "/app/spark-job-2.py"]
+CMD ["spark-submit", "--master", "local[*]", "--conf", "spark.driver.bindAddress=0.0.0.0", "--driver-class-path", "/usr/local/spark/jars/delta-core_2.12-1.1.0.jar", "--packages", "io.delta:delta-core_2.12:1.1.0", "--name", "spark-job-1", "spark-job-1.py" , "--data_path", "/data", "--output_path", "/app/output", "--log_file", "/logs/ingestion.log", "--event_dir", "/events"]

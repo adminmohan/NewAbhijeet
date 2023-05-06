@@ -31,12 +31,3 @@ ENV SPARK_HOME /opt/spark
 
 # Set PATH environment variable
 ENV PATH $SPARK_HOME/bin:$PATH
-
-# Copy the Spark job files to the container
-# WORKDIR /logs
-
-# COPY scripts/spark-job-2.py /app/spark-job-2.py
-
-
-# Run the Spark job
-# CMD ["spark-submit", "--master", "local[*]", "--name", "spark-job-2", "/app/spark-job-2.py"]
