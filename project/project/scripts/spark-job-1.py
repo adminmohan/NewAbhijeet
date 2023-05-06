@@ -7,13 +7,13 @@ from pyspark.sql.window import Window
 from pyspark import SparkConf
 import os
 
-def start_spark_history_server(log_dir):
+def start_spark_history_server(log_dir,event_dir):
     """
     Launches a Spark History Server and configures it to read logs from the specified directory.
     """
     # Set Spark configuration
     conf = SparkConf().setAppName("SparkHistoryServer").set("spark.eventLog.enabled", "true") \
-                      .set("spark.eventLog.dir", "/events").set("spark.history.fs.logDirectory", "/logs")
+                      .set("spark.eventLog.dir", event_dir).set("spark.history.fs.logDirectory", log_dir)
 
     # Create a SparkSession
     spark = SparkSession.builder.config(conf=conf).getOrCreate()
@@ -21,8 +21,6 @@ def start_spark_history_server(log_dir):
     # Start Spark History Server
     os.system(f"nohup spark-submit --class org.apache.spark.deploy.history.HistoryServer \
             $SPARK_HOME/jars/spark-*.jar > /dev/null 2>&1 &")
-
-    print(f"Spark History Server started. Logs directory: /events")
 
     return spark
 class IngestionJob:
@@ -78,6 +76,7 @@ if __name__ == "__main__":
     parser.add_argument("--data_path", help="Path to csv files", required=True)
     parser.add_argument('--output_path', type=str, default='delta', help='Output path for Delta Lake table')
     parser.add_argument('--log_file', type=str, default='ingestion.log', help='Log file path')
+    parser.add_argument('--event_dir', type=str, default='/events', help='Event directory')
     args = parser.parse_args()
 
     # Initialize IngestionJob
@@ -91,5 +90,5 @@ if __name__ == "__main__":
 
     # Stop SparkSession
     spark.stop()
-    log_dir = "/logs"
-    spark = start_spark_history_server(log_dir)
+
+    spark = start_spark_history_server(args.log_file,args.event_dir)
